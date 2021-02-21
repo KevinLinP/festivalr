@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor'
 import { Mongo } from 'meteor/mongo'
+import { initCollection } from './common.js'
 
-export const ArtistSearchResponses = new Mongo.Collection('artistSearchResponses')
+export const ArtistSearchResponses = initCollection('artistSearchResponses')

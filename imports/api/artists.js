@@ -3,9 +3,10 @@ import { Mongo } from 'meteor/mongo'
 import axios from 'axios'
 import { ArtistSearchResponses } from './artistSearchResponses.js'
 import { MusicResults } from './musicResults.js'
+import { initCollection } from './common.js'
 import _ from 'lodash'
 
-export const Artists = new Mongo.Collection('artists')
+export const Artists = initCollection('artists')
 
 if (Meteor.isServer) {
   Meteor.publish('artists', () => Artists.find())

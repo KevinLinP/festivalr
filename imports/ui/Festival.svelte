@@ -1,27 +1,21 @@
 <script>
   import { useTracker } from 'meteor/rdb:svelte-meteor-data';
   import Artist from './Artist.svelte';
+  import CreateFestivalArtist from './CreateFestivalArtist.svelte';
   import { Artists } from '../api/artists.js'
   import { Meteor } from "meteor/meteor";
   import { onMount } from 'svelte';
 
+  export let location
+
   onMount(async () => {
+    Meteor.subscribe('festivals');
+    Meteor.subscribe('festivalArtists');
     Meteor.subscribe('artists');
     Meteor.subscribe('musicResults');
   });
 
-  let newArtist = "";
-
-  function handleCreateSubmit(event) {
-    Artists.insert({
-      name: newArtist,
-      createdAt: new Date()
-    });
-
-    // Clear form
-    newArtist = "";
-  };
-
+  $: festival = useTracker(() => Festivals.findOne({slug: 'movement-2019'}).fetch());
   $: artists = useTracker(() => Artists.find({}, {sort: {name: 1}}).fetch());
 </script>
 
@@ -40,14 +34,5 @@
     </div>
   {/each}
 
-  <form on:submit|preventDefault={handleCreateSubmit}>
-    <input
-      type="text"
-      placeholder="artist name"
-      bind:value={newArtist}
-    />
-
-    <input type="submit" class="btn btn-secondary btn-sm"/>
-  </form>
-
+  <CreateFestivalArtist festival={festival} />
 </div>

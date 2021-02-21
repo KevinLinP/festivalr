@@ -1,5 +1,6 @@
 <script>
   import { Router, Link, Route } from "svelte-routing";
+  import AllFestivals from './AllFestivals.svelte'
   import Festival from './Festival.svelte'
   import User from './User.svelte'
 
@@ -8,7 +9,8 @@
 
 <Router url="{url}">
   <div>
-    <Route path="/user"><User /></Route>
-    <Route path="/"><Festival /></Route>
+    <Route path="/user" component="{User}" />
+    <Route path="/festivals" component="{AllFestivals}" />
+    <Route path="/" component="{Festival}" />
   </div>
 </Router>

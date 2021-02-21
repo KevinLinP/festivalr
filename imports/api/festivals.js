@@ -2,8 +2,8 @@ import { Meteor } from 'meteor/meteor'
 import { Mongo } from 'meteor/mongo'
 import { initCollection } from './common.js'
 
-export const MusicResults = initCollection('musicResults')
+export const Festivals = initCollection('festivals')
 
 if (Meteor.isServer) {
-  Meteor.publish('musicResults', () => MusicResults.find())
+  Meteor.publish('festivals', () => Festivals.find())
 }

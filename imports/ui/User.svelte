@@ -3,6 +3,7 @@
   import { Meteor } from "meteor/meteor";
   import { onMount } from 'svelte';
 
+  export let location
   let email = ''
   let password = ''
   const userId = useTracker(() => Meteor.userId())
