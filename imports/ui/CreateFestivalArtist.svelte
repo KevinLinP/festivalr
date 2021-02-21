@@ -18,5 +18,5 @@
     bind:value={name}
   />
 
-  <input type="submit" class="btn btn-secondary btn-sm"/>
+  <input type="submit" class="btn btn-secondary btn-sm" value="Add/Create"/>
 </form>

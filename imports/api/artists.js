@@ -14,8 +14,9 @@ if (Meteor.isServer) {
 
 Meteor.methods({
   async 'artists.search'(key) {
+    const now = new Date()
     const artist = Artists.findOne(key)
-    if (artist.searchedAt) { return }
+    if (artist.mixcloudSearchedAt) { return }
 
     try {
       const response = await axios.get('https://api.mixcloud.com/search/', {
@@ -29,10 +30,10 @@ Meteor.methods({
 
       ArtistSearchResponses.upsert(
         {artistId: key, type: 'mixcloud'},
-        {$set: {response: searchResult, fetchedAt: new Date()}}
+        {$set: {response: searchResult, fetchedAt: now}}
       )
 
-      Artists.update(key, {$set: {searchedAt: new Date()}})
+      Artists.update(key, {$set: {mixcloudSearchedAt: now}})
 
       searchResult.data.forEach((result, i) => {
         const data = _.pick(result, ['slug', 'name', 'url'])
