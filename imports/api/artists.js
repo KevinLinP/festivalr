@@ -13,46 +13,38 @@ if (Meteor.isServer) {
 
 Meteor.methods({
   async 'artists.search'(key) {
-    let searchResult = null
+    const artist = Artists.findOne(key)
+    if (artist.searchedAt) { return }
 
-    const mixcloudSearchResponse = ArtistSearchResponses.findOne({
-      artistId: key,
-      type: 'mixcloud'
-    })
+    try {
+      const response = await axios.get('https://api.mixcloud.com/search/', {
+        params: {
+          q: `"${artist.name}" ${artist.additionalSearchTerms || ''}`,
+          type: 'cloudcast'
+        }
+      })
 
-    if (mixcloudSearchResponse) {
-      searchResult = mixcloudSearchResponse.response
-    } else {
-      const artist = Artists.findOne(key)
+      const searchResult = response.data
 
-      try {
-        const response = await axios.get('https://api.mixcloud.com/search/', {
-          params: {
-            q: `${artist.name} ${artist.additionalSearchTerms || ''}`,
-            type: 'cloudcast'
-          }
-        })
-
-        ArtistSearchResponses.upsert(
-          {artistId: key, type: 'mixcloud'},
-          {$set: {response: response.data, fetchedAt: new Date()}}
-        )
-
-        searchResult = response.data
-      } catch (error) {
-        console.error(error)
-      }
-    }
-
-    searchResult.data.forEach((result, i) => {
-      const data = _.pick(result, ['slug', 'name', 'url'])
-      data.postedAt = new Date(result.created_time)
-
-      MusicResults.upsert(
-        {artistId: key, type: 'mixcloud', key: result.key},
-        {$set: data}
+      ArtistSearchResponses.upsert(
+        {artistId: key, type: 'mixcloud'},
+        {$set: {response: searchResult, fetchedAt: new Date()}}
       )
-    })
+
+      Artists.update(key, {$set: {searchedAt: new Date()}})
+
+      searchResult.data.forEach((result, i) => {
+        const data = _.pick(result, ['slug', 'name', 'url'])
+        data.postedAt = new Date(result.created_time)
+
+        MusicResults.upsert(
+          {artistId: key, type: 'mixcloud', key: result.key},
+          {$set: data}
+        )
+      })
+    } catch (error) {
+      console.error(error)
+    }
   }
 });
 
