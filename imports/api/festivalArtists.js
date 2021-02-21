@@ -7,36 +7,44 @@ import _ from 'lodash'
 
 export const FestivalArtists = initCollection('festivalArtists')
 
+const createOrAddArtist = async function (rawName, festivalId) {
+  const name = _.trim(rawName)
+  if (name.length == 0) { return }
+  const lowercaseName = _.lowerCase(name)
+  const createdAt = new Date()
+
+  let artistId = Artists.findOne({lowercaseName})?._id
+
+  if (!artistId) {
+    const slug = makeSlug(name)
+
+    artistId = await Artists.insert({
+      name,
+      lowercaseName,
+      slug,
+      mixcloudSearchedAt: null,
+      createdAt,
+    })
+  }
+
+  if (!artistId) { return }
+
+  FestivalArtists.insert({
+    festivalId,
+    artistId,
+    createdAt
+  })
+}
+
 if (Meteor.isServer) {
   Meteor.publish('festivalArtists', () => FestivalArtists.find())
 
   Meteor.methods({
-    async 'festivalArtists.create' ({name, festivalId}) {
+    async 'festivalArtists.create' ({names, festivalId}) {
       if (!this.userId) { return 'not logged in' }
 
-      const lowercaseName = _.lowerCase(name)
-      const createdAt = new Date()
-
-      let artistId = Artists.findOne({lowercaseName})?._id
-
-      if (!artistId) {
-        const slug = makeSlug(name)
-
-        artistId = await Artists.insert({
-          name,
-          lowercaseName,
-          slug,
-          mixcloudSearchedAt: null,
-          createdAt,
-        })
-      }
-
-      if (!artistId) { return }
-
-      FestivalArtists.insert({
-        festivalId,
-        artistId,
-        createdAt
+      names.split("\n").forEach((name) => {
+        createOrAddArtist(name, festivalId)
       })
     }
   });

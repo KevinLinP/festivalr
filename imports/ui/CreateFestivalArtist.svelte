@@ -3,20 +3,16 @@
   import { Artists } from '../api/artists.js'
 
   export let festival
-  let name = "";
+  let names = ""
 
   function handleCreate(event) {
-    Meteor.call('festivalArtists.create', {name, festivalId: festival._id})
+    Meteor.call('festivalArtists.create', {names, festivalId: festival._id})
     name = "";
   };
 </script>
 
 <form on:submit|preventDefault={handleCreate}>
-  <input
-    type="text"
-    placeholder="artist name"
-    bind:value={name}
-  />
+  <textarea rows="17" cols="50" bind:value={names}></textarea>
 
   <input type="submit" class="btn btn-secondary btn-sm" value="Add/Create"/>
 </form>
