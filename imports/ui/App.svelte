@@ -14,7 +14,7 @@
 
   function handleCreateSubmit(event) {
     Artists.insert({
-      text: newArtist,
+      name: newArtist,
       createdAt: new Date()
     });
 
@@ -26,9 +26,9 @@
 </script>
 
 
-<div class="container">
+<div class="container pt-5">
   <header>
-    <h1 class="display-4 font-weight-thin">Festivalr</h1>
+    <!-- <h1 class="display-4 font-weight-thin">Festivalr</h1> -->
   </header>
 
   {#each $artists as artist}

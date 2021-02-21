@@ -33,13 +33,10 @@ Meteor.methods({
           }
         })
 
-        console.log(response);
-
         ArtistSearchResponses.upsert(
           {artistId: key, type: 'mixcloud'},
           {$set: {response: response.data, fetchedAt: new Date()}}
         )
-
 
         searchResult = response.data
       } catch (error) {

@@ -12,6 +12,7 @@
 
   function handleSearch() {
     Meteor.call("artists.search", key);
+    Session.set('currentArtistId', key)
   }
 
   function handleArtistNameClick() {
