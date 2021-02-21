@@ -3,6 +3,7 @@
   import Artist from './Artist.svelte';
   import CreateFestivalArtist from './CreateFestivalArtist.svelte';
   import { Artists } from '../api/artists.js'
+  import { FestivalArtists } from '../api/festivalArtists.js'
   import { Meteor } from "meteor/meteor";
   import { onMount } from 'svelte';
 
@@ -16,7 +17,14 @@
   });
 
   $: festival = useTracker(() => Festivals.findOne({slug: 'movement-2019'}).fetch());
-  $: artists = useTracker(() => Artists.find({}, {sort: {name: 1}}).fetch());
+  $: artists = useTracker(() => {
+    if (!festival) { return [] }
+
+    const festivalArtists = FestivalArtists.find({festivalId: festival.id}).fetch()
+    const artistIds = festivalArtists.map((a) => a.artistId)
+
+    return Artists.find({_id: {$in: artistIds}}, {sort: {name: 1}}).fetch()
+  });
 </script>
 
 
