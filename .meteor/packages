@@ -23,3 +23,5 @@ svelte:compiler
 rdb:svelte-meteor-data
 static-html
 session
+accounts-password
+accounts-base
