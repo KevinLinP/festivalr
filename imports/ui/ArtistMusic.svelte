@@ -18,7 +18,7 @@
 
   {#each $musicResults as musicResult}
     <div class="d-flex flex-column mb-3">
-      <div class="align-self-end me-2 text-muted" style="line-height: 1.0;">{ formatDate(musicResult.postedAt) }</div>
+      <div class="align-self-end mb-1 me-2 text-muted" style="line-height: 1.0;">{ formatDate(musicResult.postedAt) }</div>
 
       <iframe width="100%" height="60" src="https://www.mixcloud.com/widget/iframe/?hide_cover=1&mini=1&feed={musicResult.key}" frameborder="0"></iframe>
     </div>

@@ -48,7 +48,7 @@
   </div>
 
   {#if isCurrentArtist}
-    <div class="ms-4">
+    <div class="ms-md-4">
       <ArtistMusic artist={artist} />
     </div>
   {/if}

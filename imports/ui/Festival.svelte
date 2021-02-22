@@ -30,13 +30,15 @@
 </script>
 
 
-<div class="container">
-  <header class="pb-4">
+<div class="container px-0">
+  {#if $festival}
+  <header class="pt-2 pb-4">
     <h1 class="display-4 font-weight-thin">{ $festival?.name }</h1>
   </header>
+  {/if}
 
   {#each $artists as artist}
-    <div class="mb-5">
+    <div class="mb-4">
       <Artist
         key={artist._id.toHexString()}
         artist={artist}
